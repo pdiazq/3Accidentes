@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Science Curriculum Exploration</title>
+</head>
+<style type="text/css">
+body {
+  font: 10px "Helvetica Neue";
+}
+table {
+  border-collapse: collapse;
+  width: 960px;
+}
+
+th {
+  font-weight: normal;
+  text-align: right;
+  padding-right: 6px;
+}
+
+thead td {
+  cursor: s-resize
+  height: 12px;
+}
+
+tbody td {
+  height: 12px;
+}
+
+tbody .punch {
+  background: darkslateblue;
+  margin: 0 auto;
+}
+
+.hint {
+  color: #999;
+  text-align: center;
+}
+</style>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+d3.csv("data.csv", function(csv) {
+  var courses = d3.keys(csv[0]).filter(function(key) {
+    return key != "TIPO";
+  });
+
+  d3.selectAll("thead td").data(courses).on("click", function(k) {
+    tr.sort(function(a, b) { return (b[k]) - (a[k]); });
+  });
+
+  var tr = d3.select("tbody").selectAll("tr")
+      .data(csv)
+    .enter().append("tr");
+
+  var x = d3.scale.sqrt().domain([0,(d3.max(csv, function(d) {return +d.ANTONIO;}) + 10)]).range([0,16]);
+
+  tr.append("th")
+      .text(function(d) { return d.TIPO; });
+
+  tr.selectAll("td")
+      .data(function(d) { return courses.map(function(k) { return d[k]; }); })
+    .enter().append("td")
+      .append("div")
+      .attr("class", "punch")
+      .style("border-radius", function(d) { 
+        return Math.ceil(x(+d)/2) + "px"; 
+      })
+      .style("height", function(d) { 
+        return Math.ceil(x(+d)) + "px"; 
+      })
+      .style("width", function(d) { 
+        return Math.ceil(x(+d)) + "px";
+      });
+  
+});
+</script>
+<body>
+<div class="hint">hint: click a column header to sort on a column</div>
+<table>
+  <thead>
+    <tr>
+      <th>TIPO_COMPARENDO</th>
+      <td>ANTONIO NARIÑO</td>
+      <td>BARRIOS UNIDOS</td>
+      <td>BOSA</td>
+      <td>CANDELARIA</td>
+      <td>CHAPINERO</td>
+      <td>CIUDAD BOLIVAR</td>
+      <td>ENGATIVA</td>
+      <td>FONTIBON</td>
+      <td>KENNEDY</td>
+      <td>MARTIRES</td>
+      <td>PUENTE ARANDA</td>
+      <td>RAFAEL URIBE</td>
+      <td>SAN CRISTOBAL</td>
+      <td>SANTA FE</td>
+      <td>SUBA</td>
+      <td>TEUSAQUILLO</td>
+      <td>TUNJUELITO</td>
+      <td>USAQUEN</td>
+      <td>USME</td>
+      <td>OTRO</td>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</body>
+</html>
